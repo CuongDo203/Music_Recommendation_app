@@ -4,10 +4,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
 from spotify import *
-# import spotipy
-# from spotipy.oauth2 import SpotifyClientCredentials
-# from spotipy.oauth2 import SpotifyOAuth
-# import spotipy.util as util
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -90,44 +86,12 @@ def generate_playlist_feature(complete_feature_set, playlist_df, weight_factor):
     playlist_feature_set['weight'] = playlist_feature_set['months_from_recent'].apply(lambda x: weight_factor ** (-x))
     
     playlist_feature_set_weighted = playlist_feature_set.copy()
-    #print(playlist_feature_set_weighted.iloc[:,:-4].columns)
+    
     playlist_feature_set_weighted.update(playlist_feature_set_weighted.iloc[:,:-4].mul(playlist_feature_set_weighted.weight,0))
     playlist_feature_set_weighted_final = playlist_feature_set_weighted.iloc[:, :-4]
-    #playlist_feature_set_weighted_final['id'] = playlist_feature_set['id']
     
     return playlist_feature_set_weighted_final.sum(axis = 0), complete_feature_set_nonplaylist
 
 
-
-
-
-#client id, client secret and redirect_url for my application
-# CLIENT_ID = '7689ba692c484bb881f62e5a4ef86007'
-# CLIENT_SECRET = 'a24d5173d9b34224a637e639ff027952'
-# REDIRECT_URL = 'https://localhost:8888/callback'
-
-#initialize the spotify client
-# client_manager = SpotifyOAuth(client_id=CLIENT_ID, 
-#                                           client_secret=CLIENT_SECRET, 
-#                                           redirect_uri=REDIRECT_URL,
-#                                           scope='playlist-read-private')
-# sp = spotipy.Spotify(auth_manager=client_manager)
-
-# res = sp.playlist('5BijXXNubeGn2sfnwxa5gl')
-# track_info = [{'name': track['track']['name'], 'id': track['track']['id']} for track in res['tracks']['items']]
-# id_name2 = {}
-# id_name2[res['name']] = res['id']
-
 spotify_df = pd.read_csv('Data/spotify_df.csv')
 complete_feature_set = pd.read_csv('Data/complete_feature_set.csv')
-
-# playlist = create_necessary_outputs(res['name'], id_name2,spotify_df)
-
-# complete_feature_set_playlist_vector, complete_feature_set_nonplaylist = generate_playlist_feature(complete_feature_set, playlist, 1.09)
-
-# top_music = generate_playlist_recos(spotify_df, complete_feature_set_playlist_vector, complete_feature_set_nonplaylist)
-
-# lis = []
-# for x in top_music['url']:
-#     lis.append(x)
-# print(lis)

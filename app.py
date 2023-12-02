@@ -1,8 +1,6 @@
 import streamlit as st
-from streamlit_extras.stylable_container import stylable_container
 import plotly.express as px
 import base64
-import time
 import pickle
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
@@ -28,18 +26,6 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-# CLIENT_ID = '7689ba692c484bb881f62e5a4ef86007'
-# CLIENT_SECRET = 'a24d5173d9b34224a637e639ff027952'
-# REDIRECT_URL = 'https://localhost:8888/callback'
-# # playlist_id = '5BijXXNubeGn2sfnwxa5gl'
-
-# #initialize the spotify client
-# client_credentials_manager = SpotifyOAuth(client_id=CLIENT_ID, 
-#                                           client_secret=CLIENT_SECRET, 
-#                                           redirect_uri=REDIRECT_URL,
-#                                           scope='playlist-read-private')
-# sp = spotipy.Spotify(auth_manager=client_credentials_manager)
-
 def get_token():
     auth_string = CLIENT_ID + ":" + CLIENT_SECRET
     auth_bytes = auth_string.encode("utf-8")
@@ -60,16 +46,6 @@ def get_token():
 
 def get_auth_header(token):
     return {"Authorization": "Bearer "+ token}
-
-# def get_track_id(song_name,artist_name ,token=get_token()):
-#     url = "https://api.spotify.com/v1/search"
-#     headers = get_auth_header(token=token)
-#     query = f"?q=track:{song_name}&type=track&limit=1"
-#     query_url = url+query
-#     result = requests.get(url=query_url, headers=headers)
-#     # result = sp.search(q='artist:{}track:{}', type='track',limit=1)
-#     json_result = json.loads(result.content)["tracks"]["items"][0]["id"]
-#     return json_result
    
 def get_track_id(song_name, artist_name):
     result = sp.search(q="artist:"+artist_name+"track:"+song_name, type='track')
@@ -88,7 +64,6 @@ def get_song_album_cover_url(song_name, artist_name):
     if results and results['tracks']['items']:
         track = results['tracks']['items'][0]
         album_cover_url = track['album']['images'][0]['url']
-        # track_url = track['external_urls']['spotify']
         return album_cover_url
     else:
         return 'image/logoSpotify.png'
@@ -126,7 +101,6 @@ def recommend_song_page(track_id):
 
 def user_playlist_page(playlist_id):
     st.subheader("User Playlist")
-    # playlist_uri = (st.session_state.playlist_url).split('/')[-1].split('?')[0]
     playlist_uri = playlist_id
     uri_link = 'https://open.spotify.com/embed/playlist/' + playlist_uri
     components.iframe(uri_link, height=200)
@@ -262,56 +236,7 @@ def result_page():
                     recommend_song_page(x.split('/')[-1])
                 else:
                     st.error("Can't load this song")
-                    
-            # if recommend_music_url[0] != None:
-            #     recommend_song_page(recommend_music_url[0].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-                    
-            # if recommend_music_url[1] != None:
-            #     recommend_song_page(recommend_music_url[1].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-                    
-            # if recommend_music_url[2] != None:
-            #     recommend_song_page(recommend_music_url[2].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-                    
-            # if recommend_music_url[3] != None:
-            #     recommend_song_page(recommend_music_url[3].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-                    
-            # if recommend_music_url[4] != None:
-            #     recommend_song_page(recommend_music_url[4].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-
-            # if recommend_music_url[5] != None:
-            #     recommend_song_page(recommend_music_url[5].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-
-            # if recommend_music_url[6] != None:
-            #     recommend_song_page(recommend_music_url[6].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
             
-            # if recommend_music_url[7] != None:
-            #     recommend_song_page(recommend_music_url[7].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-            
-            # if recommend_music_url[8] != None:
-            #     recommend_song_page(recommend_music_url[8].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
-
-            # if recommend_music_url[9] != None:
-            #     recommend_song_page(recommend_music_url[9].split('/')[-1])
-            # else:
-            #     st.success("Can't load this song")
             del st.session_state['rs']
         else:
             
